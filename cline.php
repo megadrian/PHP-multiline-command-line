@@ -1,89 +1,89 @@
 <?php
 if (is_cli()) {
 	echo "'quit'\tto exit\n'cls'\tto clear screen\n'clr'\tto clear buffer\n'\\\\\\'\tto enter/exit buffer\n";
-	$console=	fopen('php://stdin', 'r');
-	$input	=	'';
-	$buffer	=	'';
-	$long	=	FALSE;
-	$line	=	0;
+	$__cnsle=	fopen('php://stdin', 'r');
+	$__input=	'';
+	$__vfr	=	'';
+	$__long	=	FALSE;
+	$__line	=	0;
 	while (TRUE) {
-		if ($long) {
-			echo str_pad($line, 3, '.', STR_PAD_LEFT), '> ';
+		if ($__long) {
+			echo str_pad($__line, 3, '.', STR_PAD_LEFT), '> ';
 		} else {
-			if ($line) {
-				echo str_pad($line, 3, '.', STR_PAD_LEFT), ' Syn> ';
+			if ($__line) {
+				echo str_pad($__line, 3, '.', STR_PAD_LEFT), ' Syn> ';
 			} else {
 				echo 'Syn> ';
 			}
 		}
-		$input = trim(fgets($console));
+		$__input = trim(fgets($__cnsle));
 		switch (TRUE) {
-			case ($input == 'cls') :
+			case ($__input == 'cls') :
 				echo chr(27) . chr(91) . 'H' . chr(27) . chr(91) . 'J';
 				break;
-			case (($input == 'exit') OR ($input == 'quit') OR ($input == 'quit;')) :
+			case (($__input == 'exit') OR ($__input == 'quit') OR ($__input == 'quit;')) :
 				exit('bye');
 				break;
-			case ($input == strtolower('clr')) :
-				$buffer = '';
-				$line = 0;
+			case ($__input == strtolower('clr')) :
+				$__vfr = '';
+				$__line = 0;
 				echo ">buffer cleared\n";
 				break;
-			case ($input == '\\\\\\') :
-				if ($long) {
+			case ($__input == '\\\\\\') :
+				if ($__long) {
 					try {
-						eval($buffer);
-					} catch (Throwable $e) {
-						echo $e;
+						eval($__vfr);
+					} catch (Throwable $__ee) {
+						echo $__ee;
 					}
 					echo "\n";
-					$buffer = '';
-					$long = FALSE;
-					$line = 0;
+					$__vfr = '';
+					$__long = FALSE;
+					$__line = 0;
 				} else {
-					if (strlen($buffer) > 1) {
+					if (strlen($__vfr) > 1) {
 						try {
-							eval($buffer);
-						} catch (Throwable $e) {
-							echo $e;
+							eval($__vfr);
+						} catch (Throwable $__ee) {
+							echo $__ee;
 						}
 						echo "\n";
-						$buffer = '';
-						$line = 0;
+						$__vfr = '';
+						$__line = 0;
 					} else {
-						$long = TRUE;
+						$__long = TRUE;
 					}
 				}
 				break;
-			case ($input == '\\\\') :
-				if ($line) {
+			case ($__input == '\\\\') :
+				if ($__line) {
 					try {
-						eval($buffer);
-					} catch (Throwable $e) {
-						echo $e;
+						eval($__vfr);
+					} catch (Throwable $__ee) {
+						echo $__ee;
 					}
 					echo "\n";
 				}
 				break;
-			case ($long) :
-				$buffer .= trim($input);
-				$line++;
+			case ($__long) :
+				$__vfr .= "$__input\n";
+				$__line++;
 				break;
-			case (substr($input, -1) == '\\') :
-				$buffer .= rtrim(trim($input), '\\');
-				$line++;
+			case (substr($__input, -1) == '\\') :
+				$__vfr .= rtrim(trim($__input), '\\');
+				$__line++;
 				break;
-			case (strlen($input) == 0) :
+			case (strlen($__input) == 0) :
 				break;
 			default :
 				try {
-					if (substr(trim($input), -1) == ';') {
-						eval($input);
+					if (substr(trim($__input), -1) == ';') {
+						eval($__input);
 					} else {
-						eval("$input;");
+						eval("$__input;");
 					}
-				} catch (Throwable $e) {
-					echo $e;
+				} catch (Throwable $__ee) {
+					echo $__ee;
 				}
 				echo "\n";
 		}
